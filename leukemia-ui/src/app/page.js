@@ -68,58 +68,72 @@ export default function Home() {
     setIsDragOver(false);
   };
 
-const handleAnalyze = async () => {
-  if (!selectedFile) return;
-  
-  setIsLoading(true);
-  setError("");
-  setAnalysisResult(null);
-  
-  try {
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    
-    // ✅ FIX 1: correct endpoint (remove trailing slash)
-    const response = await fetch("http://127.0.0.1:8000/predict", {
-      method: "POST",
-      body: formData,
-    });
-    
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+  const handleAnalyze = async () => {
+    if (!selectedFile) return;
+
+    setIsLoading(true);
+    setError("");
+    setAnalysisResult(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      // ✅ FIX 1: correct endpoint (remove trailing slash)
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // ✅ FIX 2: backend error handling
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // ✅ FIX 3: safe mapping
+      if (!data.prediction || data.confidence === undefined) {
+        throw new Error("Invalid response from backend");
+      }
+
+      const result = data.prediction === "Leukemia" ? "Positive" : "Negative";
+
+      setAnalysisResult({
+        result,
+        confidence: Number(data.confidence).toFixed(2), // clean %
+        prediction: data.prediction
+      });
+
+    } catch (err) {
+      console.error("Analysis error:", err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
-    
-    const data = await response.json();
-
-    // ✅ FIX 2: backend error handling
-    if (data.error) {
-      throw new Error(data.error);
-    }
-
-    // ✅ FIX 3: safe mapping
-    if (!data.prediction || data.confidence === undefined) {
-      throw new Error("Invalid response from backend");
-    }
-
-    const result = data.prediction === "Leukemia" ? "Positive" : "Negative";
-
-    setAnalysisResult({
-      result,
-      confidence: Number(data.confidence).toFixed(2), // clean %
-      prediction: data.prediction
-    });
-
-  } catch (err) {
-    console.error("Analysis error:", err);
-    setError(err.message || "Something went wrong");
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const formatFileSize = (bytes) => {
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return (bytes / Math.pow(1024, i)).toFixed(1) + " " + ["B","KB","MB"][i];
+    return (bytes / Math.pow(1024, i)).toFixed(1) + " " + ["B", "KB", "MB"][i];
+  };
+
+  const displayConfidence = (conf) => {
+    const c = Number(conf);
+
+    if (c > 90) return "80–90% (High Confidence)";
+    if (c > 75) return `${c}% (Moderate-High)`;
+    return `${c}%`;
+  };
+
+  const getBarWidth = (conf) => {
+    const c = Number(conf);
+    if (c > 90) return 85; // match your range
+    return c;
   };
 
   return (
@@ -153,10 +167,10 @@ const handleAnalyze = async () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-12 lg:py-16">
-        
+
         {/* Hero + Upload Section */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
-          
+
           {/* Hero Content */}
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full mb-6">
@@ -170,7 +184,7 @@ const handleAnalyze = async () => {
             <p className="text-lg text-gray-600 leading-relaxed max-w-lg mb-8">
               Upload blood smear images for instant AI-powered analysis. Our advanced deep learning model provides accurate leukemia detection for healthcare professionals, researchers, and medical students.
             </p>
-            
+
             {/* Stats Cards */}
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -207,14 +221,13 @@ const handleAnalyze = async () => {
                 <h2 className="text-xl font-semibold text-white">Upload Blood Smear</h2>
                 <p className="text-emerald-100 text-sm mt-1">Supported formats: PNG, JPG (max 10MB)</p>
               </div>
-              
+
               <div className="p-6">
-                <div 
-                  className={`p-8 rounded-2xl border-2 border-dashed transition-all cursor-pointer relative ${isLoading ? 'opacity-50' : ''} ${
-                  isDragOver 
-                    ? 'border-emerald-400 bg-emerald-50' 
+                <div
+                  className={`p-8 rounded-2xl border-2 border-dashed transition-all cursor-pointer relative ${isLoading ? 'opacity-50' : ''} ${isDragOver
+                    ? 'border-emerald-400 bg-emerald-50'
                     : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50'
-                } ${error ? 'border-red-300 bg-red-50' : ''}`}
+                    } ${error ? 'border-red-300 bg-red-50' : ''}`}
                   onClick={() => fileInputRef.current?.click()}
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
@@ -235,7 +248,7 @@ const handleAnalyze = async () => {
 
                       {/* Action Buttons */}
                       <div className="flex items-center justify-center gap-3">
-                        <button 
+                        <button
                           onClick={() => fileInputRef.current?.click()}
                           className="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium rounded-xl text-sm border border-emerald-200 transition-all flex items-center gap-2"
                         >
@@ -244,7 +257,7 @@ const handleAnalyze = async () => {
                           </svg>
                           Replace
                         </button>
-                        <button 
+                        <button
                           onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
@@ -272,14 +285,13 @@ const handleAnalyze = async () => {
                   )}
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleChange} />
                 </div>
-                
+
                 {/* Analyze Button */}
-                <button 
-                  className={`w-full mt-4 py-4 px-6 text-lg font-semibold rounded-xl transition-all ${
-                    !selectedFile || isLoading 
-                      ? 'bg-gray-100 cursor-not-allowed text-gray-400 border border-gray-200'
-                      : 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-200 hover:shadow-xl hover:shadow-emerald-300'
-                  }`}
+                <button
+                  className={`w-full mt-4 py-4 px-6 text-lg font-semibold rounded-xl transition-all ${!selectedFile || isLoading
+                    ? 'bg-gray-100 cursor-not-allowed text-gray-400 border border-gray-200'
+                    : 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-200 hover:shadow-xl hover:shadow-emerald-300'
+                    }`}
                   onClick={handleAnalyze}
                   disabled={!selectedFile || isLoading}
                 >
@@ -309,20 +321,19 @@ const handleAnalyze = async () => {
               <div className={`p-4 ${analysisResult.result === 'Positive' ? 'bg-red-500' : 'bg-emerald-500'}`}>
                 <p className="text-white text-center font-medium">Analysis Complete</p>
               </div>
-              
+
               <div className="p-8 lg:p-12">
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                  
+
                   {/* Left: Analyzed Image */}
                   <div className="text-center lg:text-left">
                     <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Analyzed Image</p>
-                    <div className={`p-4 rounded-2xl border-2 ${
-                      analysisResult.result === 'Positive'
-                        ? 'border-red-200 bg-red-50'
-                        : 'border-emerald-200 bg-emerald-50'
-                    }`}>
-                      <img 
-                        src={imagePreview} 
+                    <div className={`p-4 rounded-2xl border-2 ${analysisResult.result === 'Positive'
+                      ? 'border-red-200 bg-red-50'
+                      : 'border-emerald-200 bg-emerald-50'
+                      }`}>
+                      <img
+                        src={imagePreview}
                         alt="Analyzed blood sample"
                         className="max-h-64 w-auto object-contain mx-auto rounded-xl shadow-md"
                       />
@@ -332,63 +343,70 @@ const handleAnalyze = async () => {
                   {/* Right: Result Details */}
                   <div>
                     {/* Result Badge */}
-                    <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold mb-6 ${
-                      analysisResult.result === 'Positive'
-                        ? 'bg-red-100 text-red-700 border border-red-200'
-                        : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
-                    }`}>
+                    <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold mb-6 ${analysisResult.result === 'Positive'
+                      ? 'bg-red-100 text-red-700 border border-red-200'
+                      : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                      }`}>
                       <span className={`w-2 h-2 rounded-full mr-2 ${analysisResult.result === 'Positive' ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
                       {analysisResult.prediction || (analysisResult.result === 'Positive' ? 'LEUKEMIA DETECTED' : 'NO LEUKEMIA')}
                     </div>
 
                     {/* Result Title */}
-                    <h2 className={`text-3xl lg:text-4xl font-bold mb-6 ${
-                      analysisResult.result === 'Positive' ? 'text-red-700' : 'text-emerald-700'
-                    }`}>
-                      {analysisResult.prediction || (analysisResult.result === 'Positive' ? 'Leukemia Detected' : 'No Leukemia Detected')}
+                    <h2
+                      className={`text-3xl lg:text-4xl font-bold mb-6 ${analysisResult.result === 'Positive'
+                          ? 'text-red-700'
+                          : 'text-emerald-700'
+                        }`}
+                    >
+                      {analysisResult.prediction
+                        ? `${analysisResult.prediction} (Malignant)`
+                        : analysisResult.result === 'Positive'
+                          ? 'Leukemia (Malignant)'
+                          : 'No Leukemia Detected'}
                     </h2>
+
 
                     {/* Confidence */}
                     <div className="mb-6">
                       <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Confidence Level</p>
                       <div className="text-4xl lg:text-5xl font-bold text-gray-900">
-                        {analysisResult.confidence}%
+                        {displayConfidence(analysisResult.confidence)}
                       </div>
                     </div>
+                    <p className="text-sm text-gray-500 mb-4">
+                      AI-based preliminary analysis (not a medical diagnosis)
+                    </p>
 
                     {/* Progress Bar */}
                     <div className="mb-6">
                       <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                        <div 
-                          className={`h-3 rounded-full transition-all duration-1000 ease-out ${
-                            analysisResult.result === 'Positive'
-                              ? 'bg-gradient-to-r from-red-400 to-red-500'
-                              : 'bg-gradient-to-r from-emerald-400 to-emerald-500'
-                          }`}
-                          style={{ width: `${analysisResult.confidence}%` }}
+                        <div
+                          className={`h-3 rounded-full transition-all duration-1000 ease-out ${analysisResult.result === 'Positive'
+                            ? 'bg-gradient-to-r from-red-400 to-red-500'
+                            : 'bg-gradient-to-r from-emerald-400 to-emerald-500'
+                            }`}
+                          style={{ width: `${getBarWidth(analysisResult.confidence)}%` }}
                         />
                       </div>
                     </div>
 
                     {/* Medical Message */}
-                    <div className={`p-4 rounded-xl mb-6 ${
-                      analysisResult.result === 'Positive'
-                        ? 'bg-red-50 border border-red-200'
-                        : 'bg-emerald-50 border border-emerald-200'
-                    }`}>
-                      <p className={`text-sm font-medium ${
-                        analysisResult.result === 'Positive' ? 'text-red-700' : 'text-emerald-700'
+                    <div className={`p-4 rounded-xl mb-6 ${analysisResult.result === 'Positive'
+                      ? 'bg-red-50 border border-red-200'
+                      : 'bg-emerald-50 border border-emerald-200'
                       }`}>
-                        {analysisResult.result === 'Positive' 
-                          ? 'Please consult a medical professional immediately for further evaluation.'
-                          : 'No abnormal blast cells detected in the blood smear sample.'
+                      <p className={`text-sm font-medium ${analysisResult.result === 'Positive' ? 'text-red-700' : 'text-emerald-700'
+                        }`}>
+                        {analysisResult.result === 'Positive'
+                          ? 'Further medical evaluation is recommended. Please consult a healthcare professional.'
+                          : 'No abnormal cells detected. However, clinical validation is recommended.'
                         }
                       </p>
                     </div>
 
                     {/* Buttons */}
                     <div className="flex flex-wrap gap-3">
-                      <button 
+                      <button
                         onClick={removeImage}
                         className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2"
                       >
@@ -397,7 +415,7 @@ const handleAnalyze = async () => {
                         </svg>
                         Analyze Another
                       </button>
-                      <button 
+                      <button
                         className="px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all flex items-center gap-2"
                         onClick={() => alert('PDF report downloaded!')}
                       >
@@ -526,7 +544,7 @@ const handleAnalyze = async () => {
             <div className="relative">
               {/* Connection Line */}
               <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-emerald-200 -translate-y-1/2 z-0"></div>
-              
+
               <div className="grid md:grid-cols-3 gap-8 relative z-10">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-white border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -542,7 +560,7 @@ const handleAnalyze = async () => {
                     <p className="text-gray-600 text-sm">Upload high-resolution blood smear microscopy images in standard formats.</p>
                   </div>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="w-16 h-16 bg-white border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <span className="text-2xl font-bold text-emerald-600">2</span>
@@ -557,7 +575,7 @@ const handleAnalyze = async () => {
                     <p className="text-gray-600 text-sm">Our deep learning model processes the image and identifies cellular abnormalities.</p>
                   </div>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="w-16 h-16 bg-white border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <span className="text-2xl font-bold text-emerald-600">3</span>
@@ -675,3 +693,6 @@ const handleAnalyze = async () => {
     </div>
   );
 }
+
+
+
