@@ -157,7 +157,7 @@ http://localhost:3000
 ## 📸 Sample Output
 
 * Prediction: Leukemia
-* Confidence: 98.18%
+* Confidence: 88.18%
 
 ---
 
