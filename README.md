@@ -25,7 +25,7 @@ It provides a **fast, automated, and accurate diagnosis support tool** for stude
 ## 🧪 Dataset Details
 
 * **Source:** Kaggle (Blood Cell Cancer ALL dataset)
-* **Total Images:** ~3242
+* **Total Images:** ~4000+
 * **Image Type:** Peripheral Blood Smear (PBS) images
 * **Classes:**
 
