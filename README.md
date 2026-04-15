@@ -77,7 +77,7 @@ Dataset Details:
 ### 📊 Performance
 
 * Training Accuracy: ~88%
-* Validation Accuracy: ~88–09%
+* Validation Accuracy: ~88–90%
 * High confidence predictions on unseen data
 
 ---
