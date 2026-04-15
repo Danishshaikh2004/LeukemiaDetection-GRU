@@ -99,10 +99,7 @@ This model combines **Convolutional Neural Networks (CNN)** for spatial feature 
 #### 🟥 3. Fully Connected Layer
 
 * Converts learned features into final prediction
-* Uses **Sigmoid activation** for binary output:
-
-  * 0 → Healthy
-  * 1 → Leukemia
+* Uses **Sigmoid activation** for binary output
 
 ---
 
