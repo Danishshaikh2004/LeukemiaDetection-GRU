@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
+/* ============================= */
+/* ROOT THEME (FORCE LIGHT MODE) */
+/* ============================= */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a; /* better readable dark text */
 }
 
+/* Tailwind theme mapping */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,37 +16,48 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ============================= */
+/* GLOBAL BODY STYLING */
+/* ============================= */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, sans-serif;
 }
 
+/* ============================= */
+/* UTILITIES (CLEANED + MEDICAL) */
+/* ============================= */
 @layer utilities {
+
+  /* 🔥 Soft glow (green medical tone instead of blue/purple) */
   .neon-glow {
-    box-shadow: 0 0 20px rgb(59 130 246 / 0.5), 0 0 40px rgb(59 130 246 / 0.3);
+    box-shadow: 0 0 20px rgb(16 185 129 / 0.3), 0 0 40px rgb(16 185 129 / 0.15);
   }
-  .neon-glow-purple {
-    box-shadow: 0 0 20px rgb(168 85 247 / 0.5), 0 0 40px rgb(168 85 247 / 0.3);
+
+  /* Optional accent glow */
+  .neon-glow-soft {
+    box-shadow: 0 0 15px rgb(16 185 129 / 0.2);
   }
+
+  /* ✅ FIXED GLASS EFFECT (NO DARK OVERLAY) */
   .glass {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.05);
   }
+
+  /* ✅ CLEAN GRADIENT TEXT (MEDICAL GREEN) */
   .gradient-text {
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #10b981 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  /* ============================= */
+  /* ANIMATIONS (UNCHANGED BUT CLEAN) */
+  /* ============================= */
 
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(10px); }
@@ -52,11 +67,7 @@ body {
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
   }
-  
-  .neon-glow-blue {
-    box-shadow: 0 0 20px rgb(59 130 246 / 0.4), 0 0 30px rgb(59 130 246 / 0.2);
-  }
-  
+
   @keyframes slide-in {
     from {
       opacity: 0;
@@ -67,6 +78,7 @@ body {
       transform: translateX(0) scale(1);
     }
   }
+
   @keyframes slide-out {
     from {
       opacity: 1;
@@ -77,9 +89,11 @@ body {
       transform: translateX(100%) scale(0.95);
     }
   }
+
   .animate-slide-in {
     animation: slide-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
+
   .animate-slide-out {
     animation: slide-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
