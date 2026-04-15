@@ -63,8 +63,71 @@ Dataset Details:
 ## 🧠 Model Architecture
 
 * Framework: **PyTorch**
-* Type: **Convolutional Neural Network (CNN)**
+* Type: **Hybrid Deep Learning Model (CNN + GRU)**
 * Output: Binary classification using **Sigmoid activation**
+
+---
+
+### 🔬 Architecture Overview
+
+This model combines **Convolutional Neural Networks (CNN)** for spatial feature extraction and **Gated Recurrent Units (GRU)** for sequential feature learning.
+
+---
+
+### 🧩 Components:
+
+#### 🟦 1. CNN (Feature Extraction)
+
+* Extracts spatial features from Peripheral Blood Smear images
+* Learns patterns such as:
+  * Cell shape
+  * Nucleus structure
+  * Texture variations
+* Outputs high-dimensional feature maps
+
+---
+
+#### 🟪 2. GRU (Sequential Learning)
+
+* Takes CNN feature vectors as sequential input
+* Learns dependencies between extracted features
+* Enhances contextual understanding of medical patterns
+* Reduces noise and improves classification robustness
+
+---
+
+#### 🟥 3. Fully Connected Layer
+
+* Converts learned features into final prediction
+* Uses **Sigmoid activation** for binary output:
+
+  * 0 → Healthy
+  * 1 → Leukemia
+
+---
+
+### 🔄 Model Flow
+Input Image (PBS)
+->
+CNN (Feature Extraction)
+->
+Flatten / Feature Vector
+->
+GRU (Sequential Processing)
+->
+Fully Connected Layer
+->
+Sigmoid Output (Binary Classification)
+
+---
+
+### ⚡ Why CNN + GRU?
+
+* CNN captures **spatial features**
+* GRU captures **feature dependencies**
+* Combination improves performance on **complex medical images**
+
+---
 
 ### ⚙️ Training Details
 
