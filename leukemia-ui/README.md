@@ -1,36 +1,204 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧬 Leukemia Detection using Deep Learning with GRU
 
-## Getting Started
+## 📌 Project Overview
 
-First, run the development server:
+This project presents an AI-powered system for detecting **Acute Lymphoblastic Leukemia (ALL)** from **Peripheral Blood Smear (PBS) images** using deep learning.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The system classifies blood cell images into:
+
+* 🟢 Healthy (Benign)
+* 🔴 Leukemia (Malignant)
+
+It provides a **fast, automated, and accurate diagnosis support tool** for students, researchers, and healthcare professionals.
+
+---
+
+## 🎯 Objectives
+
+* Automate leukemia detection using AI
+* Reduce dependency on manual microscopic analysis
+* Provide real-time predictions via a web interface
+* Achieve high accuracy using deep learning techniques
+
+---
+
+## 🧪 Dataset Details
+
+* **Source:** Kaggle (Blood Cell Cancer ALL dataset)
+* **Total Images:** ~3242
+* **Image Type:** Peripheral Blood Smear (PBS) images
+* **Classes:**
+
+  * Benign (Healthy)
+  * Malignant:
+
+    * Early Pre-B
+    * Pre-B
+    * Pro-B
+
+### 🔄 Preprocessing
+
+* Resized images
+* Normalization
+* Data augmentation (flip, rotation, etc.)
+* Converted to binary classification:
+
+  * Healthy vs Leukemia
+
+---
+
+## 🧠 Model Architecture
+
+* Framework: **PyTorch**
+* Type: **Convolutional Neural Network (CNN)**
+* Output: Binary classification using **Sigmoid activation**
+
+### ⚙️ Training Details
+
+* Loss Function: Binary Cross Entropy Loss (BCE)
+* Optimizer: Adam
+* Scheduler: ReduceLROnPlateau
+* Epochs: Multiple training cycles with checkpointing
+* Gradient Clipping used for stability
+
+### 📊 Performance
+
+* Training Accuracy: ~98%
+* Validation Accuracy: ~98–99%
+* High confidence predictions on unseen data
+
+---
+
+## 💻 Tech Stack
+
+### 🧠 AI / ML
+
+* Python
+* PyTorch
+* NumPy, Matplotlib
+
+### 🌐 Backend
+
+* FastAPI
+* Uvicorn
+
+### 🎨 Frontend
+
+* Next.js
+* React
+* Tailwind CSS
+
+### ☁️ Tools
+
+* Google Colab (Training)
+* GitHub (Version Control)
+
+---
+
+## 📂 Project Structure
+
+```
+LeukemiaDetection-GRU/
+├── leukemia-backend/
+│   ├── main.py
+│   ├── classes.json
+│   └── requirements.txt
+│
+├── leukemia-ui/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│
+├── model_v1.ipynb
+├── .gitignore
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## ⚙️ How to Run the Project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🔹 Backend Setup
 
-## Learn More
+```bash
+cd leukemia-backend
+pip install -r requirements.txt
+python main.py
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🔹 Frontend Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd leukemia-ui
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Open in browser:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+http://localhost:3000
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧪 Testing
+
+* Upload a new unseen blood smear image
+* Model predicts:
+
+  * Class (Healthy / Leukemia)
+  * Confidence score (%)
+
+---
+
+## 📸 Sample Output
+
+* Prediction: Leukemia
+* Confidence: 98.18%
+
+---
+
+## 🚀 Features
+
+* Real-time prediction
+* Image upload interface
+* Confidence score output
+* Clean UI for medical use
+* End-to-end pipeline (UI → API → Model)
+
+---
+
+## ⚠️ Limitations
+
+* Not a replacement for professional medical diagnosis
+* Limited dataset size
+* Binary classification (subtypes grouped)
+
+---
+
+## 🔮 Future Improvements
+
+* Multi-class classification (Early Pre-B, Pre-B, Pro-B)
+* Larger dataset training
+* Model optimization for deployment
+* Mobile app integration
+* Cloud deployment
+
+---
+
+## 👨‍💻 Author
+
+**Danish Shaikh**
+AI/ML Enthusiast | Full Stack Developer
+
+---
+
+## 📜 Disclaimer
+
+This project is for **educational and research purposes only**.
+Always consult a certified medical professional for diagnosis.
+
+---
