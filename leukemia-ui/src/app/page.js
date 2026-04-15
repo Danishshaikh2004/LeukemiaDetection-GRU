@@ -174,7 +174,7 @@ const handleAnalyze = async () => {
             {/* Stats Cards */}
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <div className="text-3xl font-bold text-emerald-600 mb-1">98%</div>
+                <div className="text-3xl font-bold text-emerald-600 mb-1">80%</div>
                 <p className="text-sm text-gray-500">Detection Accuracy</p>
               </div>
               <div className="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -663,7 +663,7 @@ const handleAnalyze = async () => {
             </div>
             <div className="text-center md:text-right">
               <p className="text-gray-500 text-sm">
-                © 2024 LeukemiaAI. All rights reserved.
+                © 2026 LeukemiaAI. All rights reserved.
               </p>
               <p className="text-gray-400 text-xs mt-1">
                 For educational and research purposes only. Not a substitute for professional medical advice.
