@@ -372,7 +372,7 @@ export default function Home() {
                     <div className="mb-6">
                       <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Confidence Level</p>
                       <div className="text-4xl lg:text-5xl font-bold text-gray-900">
-                        {displayConfidence(analysisResult.confidence)}
+                        {displayConfidence(analysisResult.confidence)}%
                         {/* {analysisResult.confidence}% */} 
                       </div>
                     </div>
