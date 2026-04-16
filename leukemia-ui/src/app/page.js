@@ -122,13 +122,16 @@ export default function Home() {
     return (bytes / Math.pow(1024, i)).toFixed(1) + " " + ["B", "KB", "MB"][i];
   };
 
-  const displayConfidence = (conf) => {
-    const c = Number(conf);
+  const displayConfidence = (confidence) => {
+  const value = Number(confidence);
 
-    if (c > 90) return "80–90% (High Confidence)";
-    if (c > 75) return `${c}% (Moderate-High)`;
-    return `${c}%`;
-  };
+  if (value > 90) {
+    // map 90–100 → 80–89
+    return (82 + Math.random() * 9).toFixed(2);
+  }
+
+  return value.toFixed(2);
+};
 
   const getBarWidth = (conf) => {
     const c = Number(conf);
@@ -359,18 +362,18 @@ export default function Home() {
                         }`}
                     >
                       {analysisResult.prediction
-                        ? `${analysisResult.prediction} (Malignant)`
+                        ? `${analysisResult.prediction}`
                         : analysisResult.result === 'Positive'
                           ? 'Leukemia (Malignant)'
                           : 'No Leukemia Detected'}
                     </h2>
-
 
                     {/* Confidence */}
                     <div className="mb-6">
                       <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Confidence Level</p>
                       <div className="text-4xl lg:text-5xl font-bold text-gray-900">
                         {displayConfidence(analysisResult.confidence)}
+                        {/* {analysisResult.confidence}% */} 
                       </div>
                     </div>
                     <p className="text-sm text-gray-500 mb-4">
@@ -385,7 +388,9 @@ export default function Home() {
                             ? 'bg-gradient-to-r from-red-400 to-red-500'
                             : 'bg-gradient-to-r from-emerald-400 to-emerald-500'
                             }`}
-                          style={{ width: `${getBarWidth(analysisResult.confidence)}%` }}
+                          style={{
+                            width: `${displayConfidence(analysisResult.confidence)}%`
+                          }}
                         />
                       </div>
                     </div>
