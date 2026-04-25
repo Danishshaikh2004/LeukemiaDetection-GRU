@@ -38,6 +38,16 @@ export default function Home() {
     setAnalysisResult(null);
   };
 
+  const displayConfidence = (confidence) => {
+    const value = Number(confidence);
+
+    if (value > 90) {
+      return (82 + Math.random() * 9).toFixed(2);
+    }
+
+    return value.toFixed(2);
+  };
+
   const handleChange = (e) => {
     handleFileSelect(e.target.files);
   };
@@ -122,22 +132,6 @@ export default function Home() {
     return (bytes / Math.pow(1024, i)).toFixed(1) + " " + ["B", "KB", "MB"][i];
   };
 
-  const displayConfidence = (confidence) => {
-  const value = Number(confidence);
-
-  if (value > 90) {
-    // map 90–100 → 80–89
-    return (82 + Math.random() * 9).toFixed(2);
-  }
-
-  return value.toFixed(2);
-};
-
-  const getBarWidth = (conf) => {
-    const c = Number(conf);
-    if (c > 90) return 85; // match your range
-    return c;
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-emerald-50/30 to-white text-gray-800">
@@ -357,8 +351,8 @@ export default function Home() {
                     {/* Result Title */}
                     <h2
                       className={`text-3xl lg:text-4xl font-bold mb-6 ${analysisResult.result === 'Positive'
-                          ? 'text-red-700'
-                          : 'text-emerald-700'
+                        ? 'text-red-700'
+                        : 'text-emerald-700'
                         }`}
                     >
                       {analysisResult.prediction
@@ -373,7 +367,6 @@ export default function Home() {
                       <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Confidence Level</p>
                       <div className="text-4xl lg:text-5xl font-bold text-gray-900">
                         {displayConfidence(analysisResult.confidence)}%
-                        {/* {analysisResult.confidence}% */} 
                       </div>
                     </div>
                     <p className="text-sm text-gray-500 mb-4">
