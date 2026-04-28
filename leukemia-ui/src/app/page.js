@@ -40,15 +40,7 @@ export default function Home() {
     setAnalysisResult(null);
   };
 
-  const displayConfidence = (confidence) => {
-    const value = Number(confidence);
-
-    if (value > 90) {
-      return (82 + Math.random() * 9).toFixed(2);
-    }
-
-    return value.toFixed(2);
-  };
+ 
 
 
 
@@ -470,7 +462,8 @@ export default function Home() {
                     <div className="mb-6">
                       <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Confidence Level</p>
                       <div className="text-4xl lg:text-5xl font-bold text-gray-900 confidence-value">
-                        {displayConfidence(analysisResult.confidence)}%
+                        {/* {displayConfidence(analysisResult.confidence)}% */}
+                        {analysisResult.confidence}%
                       </div>
                     </div>
                     <p className="text-sm text-gray-500 mb-4">
@@ -486,7 +479,7 @@ export default function Home() {
                             : 'bg-gradient-to-r from-emerald-400 to-emerald-500'
                             }`}
                           style={{
-                            width: `${displayConfidence(analysisResult.confidence)}%`
+                            width: `${analysisResult.confidence}%`
                           }}
                         />
                       </div>
